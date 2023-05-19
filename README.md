@@ -16,6 +16,10 @@ DATABASES = {
         'NAME': 'ldap://ldap.nodomain.org/',
         'USER': 'cn=admin,dc=nodomain,dc=org',
         'PASSWORD': 'some_secret_password',
+        'BASEDN': 'dc=somedomain,dc=something',
+        'CONNECTION_OPTIONS': {
+           ldap.OPT_X_TLS_REQUIRE_CERT: ldap.OPT_X_TLS_NEVER 
+         }
      },
      'default': {
         # your default DB config
@@ -24,5 +28,5 @@ DATABASES = {
 DATABASE_ROUTERS = ['ldapdb.router.Router']
 '''
 
-`mprov_ldap_manager.middleware.LDAPManagerMiddleware` to the `MIDDLEWARE` array.
+
 5. Run `touch /var/www/mprov_control_center/mprov_control_center/wsgi.py` to refresh the mPCC or restart your webserver.

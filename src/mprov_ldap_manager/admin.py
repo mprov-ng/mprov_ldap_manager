@@ -8,7 +8,7 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import LdapGroup, LdapUser
+from .models import LdapGroup, LdapUser, LdapServer
 
 
 class LdapUserAdmin(admin.ModelAdmin):
@@ -41,6 +41,8 @@ class LdapGroupAdmin(admin.ModelAdmin):
     list_display = ['name', 'gid']
     search_fields = ['name']
 
+class LdapServerAdmin(admin.ModelAdmin):
+    pass
 
 admin.site.register(LdapGroup, LdapGroupAdmin)
 admin.site.register(LdapUser, LdapUserAdmin)

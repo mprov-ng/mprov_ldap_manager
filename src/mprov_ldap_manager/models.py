@@ -14,19 +14,6 @@ from django.conf import settings
 from django.dispatch import receiver
 from django.db.models.signals import pre_save, pre_delete, post_save
 
-# Server Config
-# - URL 
-# - BaseDN
-# - Cert/key/ca
-# (How to do auth?)
-
-class LdapServer(models.Model):
-    url = models.CharField(max_length=4096)
-    basedn = models.CharField(max_length=4096)
-    cert = models.TextField(blank=True)
-    cert_key = models.TextField(blank=True)
-    cert_ca = models.TextField(blank=True)
-
 
 # Users
 # - uid -> username
@@ -42,7 +29,7 @@ class LdapUser(ldapdb.models.Model):
     Class for representing an LDAP user entry.
     """
     # LDAP meta-data
-    base_dn = "dc=cm,dc=cluster"
+    base_dn = settings.DATABASES['ldap']['BASEDN']
     object_classes = ['posixAccount', 'shadowAccount', 'inetOrgPerson']
     last_modified = fields.DateTimeField(db_column='modifyTimestamp', editable=False)
 
@@ -83,7 +70,7 @@ class LdapGroup(ldapdb.models.Model):
     Class for representing an LDAP group entry.
     """
     # LDAP meta-data
-    base_dn = "dc=cm,dc=cluster"
+    base_dn =  settings.DATABASES['ldap']['BASEDN']
     object_classes = ['posixGroup']
 
     # posixGroup attributes

@@ -5,6 +5,8 @@
 # Copyright (c) The django-ldapdb project
 
 from django.db.models import Manager
+from django import forms
+
 
 import ldapdb.models
 from ldapdb.models import fields
@@ -26,7 +28,7 @@ from django.db.models.signals import pre_save, pre_delete, post_save
 
 class LdapUser(ldapdb.models.Model):
     """
-    Class for representing an LDAP user entry.
+    Area for managing LDAP users
     """
     # LDAP meta-data
     base_dn = settings.DATABASES['ldap']['BASEDN']
@@ -49,7 +51,7 @@ class LdapUser(ldapdb.models.Model):
     home_directory = fields.CharField(db_column='homeDirectory')
     login_shell = fields.CharField(db_column='loginShell', default='/bin/bash')
     username = fields.CharField(db_column='uid', primary_key=True)
-    password = fields.CharField(db_column='userPassword')
+    password = fields.CharField(db_column='userPassword', blank=True, null=True, help_text="To remain unchanged, leave blank")
 
     # shadowAccount
     last_password_change = fields.TimestampField(db_column='shadowLastChange')
@@ -67,7 +69,7 @@ class LdapUser(ldapdb.models.Model):
 
 class LdapGroup(ldapdb.models.Model):
     """
-    Class for representing an LDAP group entry.
+    Area for managing LDAP groups
     """
     # LDAP meta-data
     base_dn =  settings.DATABASES['ldap']['BASEDN']

@@ -8,11 +8,23 @@ from django import forms
 from django.contrib import admin
 from django.contrib.admin.widgets import FilteredSelectMultiple
 
-from .models import LdapGroup, LdapUser, LdapServer
+from .models import LdapGroup, LdapUser
+from django.forms import ModelForm, PasswordInput
 
+class LdapUserForm(ModelForm):
+    password = forms.CharField(widget=PasswordInput())
+    class Meta:
+        model = LdapUser
+        exclude = ['dn', 'photo'] 
+    def clean(self):
+        password = self.cleaned_data['password']
+        if not password or password == "":
+            del self.cleaned_data['password']
+        return self.cleaned_data
 
 class LdapUserAdmin(admin.ModelAdmin):
-    exclude = ['dn', 'password', 'photo']
+    form = LdapUserForm
+    exclude = ['dn', 'photo']
     list_display = ['username', 'first_name', 'last_name', 'email', 'uid']
     search_fields = ['first_name', 'last_name', 'full_name', 'username']
 

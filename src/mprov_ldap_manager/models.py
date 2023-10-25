@@ -61,7 +61,13 @@ class LdapUser(ldapdb.models.Model):
 
     def __unicode__(self):
         return self.full_name
-
+    
+    def save(self, *args, **kwargs):
+        if self.password != "":
+            self.last_password_change = self.last_password_change.now()
+        self.full_name = f"{self.first_name} {self.last_name}"
+        self.gecos = f"{self.first_name} {self.last_name}"
+        return super().save(*args, **kwargs)
 # groups
 # cn -> groupname
 # gidNumber -> gid

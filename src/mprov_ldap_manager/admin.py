@@ -12,20 +12,23 @@ from .models import LdapGroup, LdapUser
 from django.forms import ModelForm, PasswordInput
 
 class LdapUserForm(ModelForm):
-    password = forms.CharField(widget=PasswordInput())
+    password = forms.CharField(widget=PasswordInput(),required=False, help_text="To remain unchanged, leave blank")
     class Meta:
         model = LdapUser
         exclude = ['dn', 'photo'] 
     def clean(self):
-        password = self.cleaned_data['password']
-        if not password or password == "":
-            del self.cleaned_data['password']
-        return self.cleaned_data
+        data = self.cleaned_data
+        if 'password' in data:
+            password = data['password']
+            if not password or password == "":
+                del data['password']
+        return data
 
 class LdapUserAdmin(admin.ModelAdmin):
     form = LdapUserForm
-    exclude = ['dn', 'photo']
+    exclude = ['dn', 'photo', 'full_name', 'gecos']
     list_display = ['username', 'first_name', 'last_name', 'email', 'uid']
+    readonly_fields = ['last_password_change']
     search_fields = ['first_name', 'last_name', 'full_name', 'username']
 
 

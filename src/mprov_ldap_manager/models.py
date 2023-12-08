@@ -7,6 +7,7 @@
 from django.db.models import Manager
 from django import forms
 
+from django.utils import timezone
 
 import ldapdb.models
 from ldapdb.models import fields
@@ -63,8 +64,8 @@ class LdapUser(ldapdb.models.Model):
         return self.full_name
     
     def save(self, *args, **kwargs):
-        if self.password != "":
-            self.last_password_change = self.last_password_change.now()
+        if self.password != "" and self.password is not None:
+            self.last_password_change = timezone.now()
         self.full_name = f"{self.first_name} {self.last_name}"
         self.gecos = f"{self.first_name} {self.last_name}"
         return super().save(*args, **kwargs)
